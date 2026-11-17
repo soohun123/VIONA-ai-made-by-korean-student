@@ -20,6 +20,25 @@ class AccountTests(unittest.TestCase):
         with patch.object(desktop,'DATA',self.root),patch.object(desktop,'BUNDLE',self.root):bridge=desktop.Bridge(controller)
         return bridge,controller
 
+    def test_local_registration_login_and_privilege(self):
+        bridge,c=self.bridge();password=secrets.token_urlsafe(16)
+        self.assertTrue(bridge.register('new_user',password,password)['ok'])
+        self.assertFalse(bridge.auth_status()['authenticated'])
+        self.assertIn('error',bridge.register('NEW_USER',password,password))
+        self.assertEqual(bridge.login('new_user',password)['user']['role'],'user')
+        self.assertEqual(bridge.add_model()['code'],'developer_required')
+        self.assertNotIn(password.encode(),bridge._accounts.database.read_bytes())
+        bridge.logout();self.assertTrue(bridge.login('NEW_USER',password)['ok'])
+
+    def test_registration_validation_and_reserved_names(self):
+        password=secrets.token_urlsafe(16)
+        for login,pw,confirmation in [('soo_dev',password,password),('admin',password,password),('../x',password,password),('ab',password,password),('valid_user','short','short'),('valid_user',password,'different')]:
+            self.assertIn('error',self.accounts.register(login,pw,confirmation))
+
+    def test_social_only_account_password_login_is_rejected(self):
+        self.accounts.social('google',{'sub':'social_subject'})
+        self.assertIn('error',self.accounts.login('google:social_subject','anything'))
+
     def test_no_model_or_history_access_before_login(self):
         bridge,c=self.bridge()
         self.assertFalse(bridge.bootstrap()['authenticated'])

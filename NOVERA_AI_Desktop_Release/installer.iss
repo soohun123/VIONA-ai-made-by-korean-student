@@ -1,7 +1,7 @@
 [Setup]
 AppId={{302881F9-B378-4E7B-8597-E594C5721210}
 AppName=NOVERA AI Desktop
-AppVersion=1.2.0
+AppVersion=1.2.2
 AppPublisher=NOVERA / VIONA
 DefaultDirName={autopf}\NOVERA AI Desktop
 DefaultGroupName=NOVERA AI Desktop
@@ -66,4 +66,5 @@ begin
   if (CurUninstallStep = usPostUninstall) and (not UninstallSilent) then
     MsgBox('Your conversations, settings and models have been preserved. User data: ' + ExpandConstant('{localappdata}\NOVERA AI Desktop') + #13#10 + 'Bundled models: ' + ExpandConstant('{app}\model-pack'), mbInformation, MB_OK);
 end;
+
 

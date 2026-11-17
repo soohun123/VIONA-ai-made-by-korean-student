@@ -34,6 +34,24 @@ class Accounts:
             with c:yield c
         finally:c.close()
 
+    def register(self,login,password,confirmation):
+        if not all(isinstance(v,str) for v in (login,password,confirmation)):
+            return {'error':'입력 내용을 확인해 주세요.'}
+        login=login.strip().lower()
+        if not re.fullmatch(r'[a-z0-9][a-z0-9_]{2,31}',login):
+            return {'error':'아이디는 영문 소문자·숫자·밑줄로 3~32자 입력하세요.'}
+        if login in ('developer','admin','administrator','root',str(self.developer['login']).lower()):
+            return {'error':'사용할 수 없는 아이디입니다.'}
+        if len(password)<10 or len(password)>128:
+            return {'error':'비밀번호는 10~128자로 입력하세요.'}
+        if password!=confirmation:return {'error':'비밀번호 확인이 일치하지 않습니다.'}
+        identifier=uuid.uuid4().hex
+        hashed=json.dumps(password_hash(password))
+        with self.lock,self.connect() as c:
+            try:c.execute('INSERT INTO users VALUES(?,?,?,?,?)',(identifier,login,hashed,'user',time.time()))
+            except sqlite3.IntegrityError:return {'error':'이미 사용 중인 아이디입니다.'}
+        return {'ok':True}
+
     def login(self,login,password):
         login=str(login).strip().lower();password=str(password)
         if not login or len(login)>254 or len(password)>128:return {'error':'계정 또는 비밀번호를 확인해 주세요.'}
@@ -41,7 +59,8 @@ class Accounts:
             attempt=c.execute('SELECT * FROM attempts WHERE login=?',(login,)).fetchone()
             if attempt and attempt['until']>time.time():return {'error':'로그인 시도가 많습니다. 잠시 후 다시 시도해 주세요.'}
             row=c.execute('SELECT * FROM users WHERE login=?',(login,)).fetchone()
-            valid=verify(password,json.loads(row['password']) if row else self.developer['password_hash'])
+            record=json.loads(row['password']) if row else None
+            valid=verify(password,record or self.developer['password_hash']) and bool(record)
             if not row or not valid:
                 count=(attempt['count'] if attempt and not attempt['until'] else 0)+1
                 c.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?)',(login,count,time.time()+60 if count>=5 else 0))

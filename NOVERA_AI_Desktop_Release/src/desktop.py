@@ -355,11 +355,15 @@ class Bridge:
     def login(self,login,password):
         with self._auth_lock:
             if self._controller.lock.locked():return {'error':'현재 작업을 먼저 중지한 뒤 로그인해 주세요.'}
-            if str(login).strip().lower()!='soo_dev':return {'error':'개발자 계정을 확인해 주세요. 일반 사용자는 Google 또는 네이버로 로그인하세요.'}
             self._social.cancel()
             result=self._accounts.login(login,password)
             if result.get('ok'):self._user=result['user']
             return result
+    def register(self,login,password,confirmation):
+        with self._auth_lock:
+            if self._user:return {'error':'로그아웃 후 회원가입해 주세요.'}
+            if self._controller.lock.locked():return {'error':'현재 작업을 먼저 중지해 주세요.'}
+            return self._accounts.register(login,password,confirmation)
     def logout(self):
         with self._auth_lock:
             self._social.cancel();self._controller.cancel();self._user=None

@@ -29,3 +29,13 @@ body.signed-out>aside,body.signed-out>main{display:none}
 .setup-instructions{max-width:700px;line-height:1.8}
 .setup-instructions li+li{margin-top:12px}
 @media(max-width:900px){#accountName{max-width:100px}.account-controls{margin-right:10px;gap:6px}}
+
+.local-auth{margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.auth-switch{display:flex;gap:8px;margin-bottom:20px}
+.auth-switch button{flex:1;min-height:44px}
+.auth-switch button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.local-auth form{display:grid;gap:16px}
+.local-auth input{min-height:44px}
+.local-auth small{color:var(--muted);line-height:1.6;margin-top:-10px}
+.local-auth input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:520px){.auth-screen{padding:16px}.auth-content{padding:24px 20px}}

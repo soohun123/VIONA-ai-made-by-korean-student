@@ -58,3 +58,24 @@ function htmlExport(content,text){
 }
 
 $('checkUpdates').onclick=async()=>{const button=$('checkUpdates');button.disabled=true;try{const r=await api.check_updates();$('updateStatus').textContent=(r.current_version?'앱 '+r.current_version+' · ':'')+(r.available?'새 버전 '+r.version+' · 앱을 다시 시작하면 자동 적용합니다.':r.status||r.error||'확인 완료');}finally{button.disabled=false}};
+
+function authMode(register){
+ $('registerForm').hidden=!register;$('developerLoginForm').hidden=register;
+ $('showRegister').setAttribute('aria-pressed',String(register));$('showLogin').setAttribute('aria-pressed',String(!register));
+ $('developerPassword').value='';$('registerPassword').value='';$('registerConfirm').value='';$('authMessage').textContent='';
+}
+$('showLogin').onclick=()=>authMode(false);
+$('showRegister').onclick=()=>authMode(true);
+$('registerForm').onsubmit=async event=>{
+ event.preventDefault();if(!api)return;
+ if($('registerPassword').value!==$('registerConfirm').value){$('authMessage').textContent='비밀번호 확인이 일치하지 않습니다.';return;}
+ $('registerSubmit').disabled=true;
+ try{
+  const username=$('registerUsername').value;
+  const result=await api.register(username,$('registerPassword').value,$('registerConfirm').value);
+  $('registerPassword').value='';$('registerConfirm').value='';
+  if(result.error)$('authMessage').textContent=result.error;
+  else{authMode(false);$('developerUsername').value=username.trim().toLowerCase();$('authMessage').textContent='회원가입이 완료됐습니다. 로그인해 주세요.';}
+ }catch(e){$('authMessage').textContent='회원가입을 처리하지 못했습니다. 다시 시도하세요.';}
+ finally{$('registerSubmit').disabled=false;}
+};
