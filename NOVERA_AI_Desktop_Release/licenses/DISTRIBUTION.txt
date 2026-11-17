@@ -1,0 +1,29 @@
+NOVERA AI Desktop 1.0 - private local build
+
+This installer includes a Python inference runtime, pywebview, llama.cpp bindings,
+stable-diffusion.cpp native runtimes and the Apache-2.0 Qwen2.5-Coder GGUF.
+Third-party notices and licenses are included in the runtime and licenses folder.
+The Microsoft-signed Evergreen Standalone WebView2 installer is included for
+offline installation when Runtime is missing. Existing Runtime is left unchanged.
+Microsoft WebView2 is subject to Microsoft software license terms. No system driver is installed.
+
+Existing API keys, cloud tunnels, conversation history and training photos are NOT
+included. No GPU driver is installed or changed. Internet is not required for inference.
+
+The existing private VIONA image LoRA and text LoRA are NOT embedded in this installer.
+They are located on this user's PC and verified by SHA-256 before use. The private
+image LoRA was trained partly from 11k Hands under reasonable academic fair use.
+Do not redistribute these trained adapters without resolving all training-data terms.
+Image models are likewise referenced locally; their redistribution requires the
+applicable CreativeML Open RAIL-M conditions. No additional model is fetched silently.
+
+Qwen: https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF
+llama.cpp bindings: https://github.com/abetlen/llama-cpp-python
+stable-diffusion.cpp: https://github.com/leejet/stable-diffusion.cpp
+pywebview: https://github.com/r0x0r/pywebview
+Python: https://www.python.org/
+11k Hands: https://sites.google.com/view/11khands/home
+
+Uninstall preserves user data and model-pack by default. No recursive deletion of
+user models or training data is performed. Updates retain existing model-pack files.
+An incompatible existing file is detected by checksum rather than overwritten.
