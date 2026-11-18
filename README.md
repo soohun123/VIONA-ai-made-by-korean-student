@@ -5,9 +5,17 @@
 - `NovaBrain/NovaBrain_LLM_v8`: 웹 UI, AI 서버, 모델 실행 및 학습 도구 소스
 - `NOVERA_AI_Desktop_Release`: 데스크톱 실행기, 테스트, Windows 빌드 및 서명된 로컬 자동 업데이트 도구
 
+## Windows 설치 프로그램
+
+[Setup 다운로드 — Releases](https://github.com/soohun123/VIONA-ai-made-by-korean-student/releases/tag/desktop-v1.2.2-public)
+
+**NOVERA_AI_Setup.exe와 모든 NOVERA_AI_Setup-*.bin 파일을 같은 폴더에 다운로드한 뒤 EXE를 실행하세요.** 파일명을 바꾸지 마세요. `Code → Download ZIP`에는 설치 파일이 포함되지 않습니다.
+
+공개 설치본 1.2.2에는 회원가입·로그인과 Qwen 기반 VIONA AI 1.5B Q4_K_M 채팅 모델이 포함됩니다. 계정은 PC별로 저장됩니다. 추가 학습 LoRA·이미지 모델·소셜 로그인 서비스 설정은 제외했습니다. 개발 PC 전용 자동 업데이트 채널은 공개 설치본에서 비활성화했습니다.
+
 ## 배포 범위
 
-이 저장소는 소스코드 배포본입니다. 모델 가중치, LoRA, 설치 EXE, 가상환경, 학습 데이터, 대화 기록, API 키, 서명 개인키 및 실제 계정 설정은 포함하지 않습니다. 모델은 해당 제공자의 라이선스를 확인하고 별도로 준비해야 합니다.
+이 저장소의 Git 파일은 소스코드 배포본입니다. 설치 EXE와 포함 모델은 위 Releases에서 별도로 제공합니다. 모델 가중치, LoRA, 설치 EXE, 가상환경, 학습 데이터, 대화 기록, API 키, 서명 개인키 및 실제 계정 설정은 포함하지 않습니다. 모델은 해당 제공자의 라이선스를 확인하고 별도로 준비해야 합니다.
 
 ## 실행 전 준비
 
