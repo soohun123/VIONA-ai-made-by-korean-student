@@ -1,4 +1,5 @@
 import json,sys,traceback,time,re
+from response_guard import repeating,grounding_reply
 import engine
 from generation_resources import release_generation
 engine.startup()
@@ -9,6 +10,11 @@ for line in sys.stdin:
         data=json.loads(line)
         req=engine.ChatRequest(**data)
         msgs=engine.prepare(req)
+        grounded=grounding_reply(msgs)
+        if grounded:
+            print(json.dumps({'token':grounded},ensure_ascii=False),flush=True)
+            print(json.dumps({'done':True,'metrics':{'finish_reason':'grounding_guard','output_tokens':0,'tokens_per_second':0,'generated_by_model':False}}),flush=True)
+            continue
         start=time.perf_counter();first=None;parts=[];finish_reason=None
         chunks=engine.llm.create_chat_completion(messages=msgs,max_tokens=req.max_tokens,temperature=req.temperature,top_p=req.top_p,repeat_penalty=req.repeat_penalty,frequency_penalty=req.frequency_penalty,stream=True,seed=42)
         for chunk in chunks:
@@ -25,6 +31,8 @@ for line in sys.stdin:
                         if closing:
                             end_code=opening.end()+closing.end()
                             delta=combined[len(previous):end_code];finished_code=True
+                if repeating(''.join(parts)+delta):
+                    finish_reason='repetition_guard';break
                 parts.append(delta)
                 print(json.dumps({'token':delta},ensure_ascii=False),flush=True)
                 if finished_code:

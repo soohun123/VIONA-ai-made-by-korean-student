@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--resume',type=Path)
     parser.add_argument('--fast-cpu',action='store_true')
     parser.add_argument('--once',action='store_true')
+    parser.add_argument('--lean-embedding',action='store_true')
     args = parser.parse_args()
     if not 30 <= args.seconds <= 900:
         parser.error('Training budget must be 30..900 seconds')
@@ -114,7 +115,19 @@ def main():
         model.config.use_cache = False
         if args.fast_cpu:
             backbone=model.get_base_model()
-            backbone.model.embed_tokens.float();backbone.model.norm.float();backbone.lm_head.float()
+            if args.lean_embedding:
+                # Frozen embedding is a lookup: retain BF16 storage, expand only batch output.
+                if any(p.requires_grad for p in backbone.model.embed_tokens.parameters()):raise RuntimeError('Embedding unexpectedly trainable')
+                backbone.model.embed_tokens.register_forward_hook(lambda module,inputs,output:output.float())
+                # Qwen ties embedding/head weights; converting the head would expand both.
+                if any(p.requires_grad for p in backbone.lm_head.parameters()):raise RuntimeError('Output head unexpectedly trainable')
+                backbone.lm_head.register_forward_pre_hook(lambda module,inputs:(inputs[0].to(torch.bfloat16),))
+                backbone.lm_head.register_forward_hook(lambda module,inputs,output:output.float())
+                report['lean_embedding']=True
+                report['output_head_compute']='BF16 CPU; slower but lower memory; logits expanded to FP32'
+            else:
+                backbone.model.embed_tokens.float();backbone.lm_head.float()
+            backbone.model.norm.float()
             for block in backbone.model.layers[-4:]:block.float()
             def before_frozen(block,inputs):block.float()
             def after_frozen(block,inputs,output):

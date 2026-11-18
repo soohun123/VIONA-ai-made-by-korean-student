@@ -82,13 +82,22 @@ def worker(config):
         chunks=None
         try:
             req=json.loads(line);started=time.monotonic();parts=[];finish_reason=None
+            from response_guard import grounding_reply
+            grounded=grounding_reply(req['messages'])
+            if grounded:
+                print(json.dumps({'token':grounded},ensure_ascii=False),flush=True)
+                print(json.dumps({'done':True,'tokens':0,'elapsed':0,'tokens_per_second':0,'finish_reason':'grounding_guard','budget':{},'generated_by_model':False}),flush=True)
+                continue
             from qwen_guard import budget
             if req.get('guards',True):messages,output_limit,budget_info=budget(req['messages'],llm.tokenize,c['context'],req.get('max_tokens',512))
             else:messages,output_limit,budget_info=req['messages'],req.get('max_tokens',512),{}
-            chunks=llm.create_chat_completion(messages=messages,max_tokens=output_limit,temperature=.15 if req.get('coding') else .35,stream=True,seed=42)
+            chunks=llm.create_chat_completion(messages=messages,max_tokens=output_limit,temperature=.15 if req.get('coding') else .25,repeat_penalty=1.08,stream=True,seed=42)
             for chunk in chunks:
                 if chunk['choices'][0].get('finish_reason'):finish_reason=chunk['choices'][0]['finish_reason']
                 token=chunk['choices'][0].get('delta',{}).get('content') or ''
+                from response_guard import repeating
+                if token and repeating(''.join(parts)+token):
+                    finish_reason='repetition_guard';break
                 if token:parts.append(token);print(json.dumps({'token':token},ensure_ascii=False),flush=True)
             n=len(llm.tokenize(''.join(parts).encode(),add_bos=False));elapsed=time.monotonic()-started
             print(json.dumps({'done':True,'tokens':n,'elapsed':elapsed,'tokens_per_second':n/max(elapsed,.001),'finish_reason':finish_reason,'budget':budget_info}),flush=True)

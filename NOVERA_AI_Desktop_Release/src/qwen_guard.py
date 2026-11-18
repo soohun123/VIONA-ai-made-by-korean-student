@@ -1,5 +1,6 @@
 """Bounded context and static checks. Never executes generated Python."""
 import ast,json,re
+from response_guard import FACTUAL_RULES
 from coding_policy import PYTHON_SYSTEM,CONTRACT_CHECKS
 
 def analysis_only(text):
@@ -14,6 +15,7 @@ def html_request(text):
     return bool(re.search(r'html|웹\s*페이지|웹사이트',text,re.I) and re.search(r'만들|짜|작성|구현|코드|create|build|write|code',text,re.I))
 
 def system_message(text,extra=''):
+    extra=FACTUAL_RULES+str(extra)
     if html_request(text):return 'Return one complete self-contained HTML5 document in a single html code block, including inline CSS and needed JavaScript. Use the user language for visible text. Close the html tag. No placeholders or external dependencies. Do not claim browser tests were run. '+str(extra)[:2000]
     if coding_request(text):
         if re.search(r'설명|분석|리뷰|검토|explain|review|analy[sz]e',text,re.I):return CONTRACT_CHECKS+' Provide the requested explanation and complete implementation in a Python code block. Do not claim unperformed tests. '+str(extra)[:2000]

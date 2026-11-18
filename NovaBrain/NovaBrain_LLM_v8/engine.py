@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 import psutil
 from generation_resources import release_generation
 from runtime_settings import read_settings
+from response_guard import FACTUAL_RULES
 
 ROOT = Path(__file__).resolve().parent
 MODEL = Path(os.getenv('NOVABRAIN_MODEL', str(ROOT / 'model.gguf')))
@@ -35,7 +36,7 @@ class ChatRequest(BaseModel):
     max_tokens: int = Field(default=4096, ge=1, le=MAX_OUTPUT)
     temperature: float = Field(default=0.7, ge=0, le=2)
     top_p: float = Field(default=0.9, gt=0, le=1)
-    repeat_penalty: float = Field(default=1.0,ge=1.0,le=1.3)
+    repeat_penalty: float = Field(default=1.08,ge=1.0,le=1.3)
     frequency_penalty: float = Field(default=0.0,ge=0,le=0.5)
     code_only: bool = False
 
@@ -138,6 +139,7 @@ def prepare(req):
         raise HTTPException(400, '마지막 메시지는 user여야 합니다.')
     if messages[0]['role'] != 'system':
         messages.insert(0, {'role':'system','content':'당신의 이름은 VIONA입니다. 한국어로 정확하고 간결하게 답하세요.'})
+    messages[0]['content'] += '\n'+FACTUAL_RULES
     # llama-cpp-python chat formatting can add extra template tokens; reserve margin.
     reserve = max(256, math.ceil(REQUESTED_CTX * 0.03))
     budget = REQUESTED_CTX - req.max_tokens - reserve
