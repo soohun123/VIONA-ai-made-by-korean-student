@@ -10,10 +10,11 @@ Microsoft WebView2 is subject to Microsoft software license terms. No system dri
 Existing API keys, cloud tunnels, conversation history and training photos are NOT
 included. No GPU driver is installed or changed. Internet is not required for inference.
 
-The existing private VIONA image LoRA and text LoRA are NOT embedded in this installer.
-They are located on this user's PC and verified by SHA-256 before use. The private
-image LoRA was trained partly from 11k Hands under reasonable academic fair use.
-Do not redistribute these trained adapters without resolving all training-data terms.
+The NOVERA Forge text LoRA is bundled with its matching Qwen base. See
+NOVERA-Forge-NOTICE.txt and Qwen-LICENSE.txt for origin and modification details.
+The private VIONA image LoRA is referenced locally and verified by SHA-256.
+It was trained partly from 11k Hands under reasonable academic fair use.
+Do not redistribute that image adapter without resolving all training-data terms.
 Image models are likewise referenced locally; their redistribution requires the
 applicable CreativeML Open RAIL-M conditions. No additional model is fetched silently.
 

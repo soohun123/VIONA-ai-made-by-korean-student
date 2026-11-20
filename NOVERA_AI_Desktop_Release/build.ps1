@@ -14,7 +14,7 @@ if($LASTEXITCODE){throw 'PyInstaller failed'}
 if($LASTEXITCODE){throw 'Version staging failed'}
 $version=(Get-Content -LiteralPath VERSION.txt -Raw).Trim()
 $iss=Get-Content -LiteralPath installer.iss -Raw
-$iss=[regex]::Replace($iss,'(?m)^AppVersion=.*$',('AppVersion='+$version))
+$iss=[regex]::Replace($iss,'(?m)^AppVersion=(?!\{).*$',('AppVersion='+$version))
 Set-Content -LiteralPath installer.iss -Value $iss -Encoding utf8
 $iscc='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
 if($Installer -or $Prepare){

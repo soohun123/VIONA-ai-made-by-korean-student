@@ -1,0 +1,3 @@
+NOVERA Forge 1.5B, 534 optimizer steps. NOVERA SFT+LoRA weights exported to GGUF.
+Based on Qwen2.5-Coder-1.5B-Instruct, Apache License 2.0. See LICENSE-Qwen.txt.
+https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct

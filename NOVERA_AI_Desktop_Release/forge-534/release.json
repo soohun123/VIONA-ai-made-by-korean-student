@@ -1,0 +1,61 @@
+{
+  "desktop_version": "1.2.8",
+  "model": "NOVERA Forge 1.5B",
+  "cumulative_optimizer_steps": 534,
+  "adapter": {
+    "file": "NOVERA-Forge-1.5B-LoRA-534steps-f16.gguf",
+    "sha256": "d0e44623b27539f3320408456cb365a58087d19f2bc8ca915ab7169239064526"
+  },
+  "base": {
+    "repo": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046"
+  },
+  "lora_enabled": true,
+  "evaluation_settings": {
+    "seed": 42,
+    "temperature": 0,
+    "context": 2048,
+    "max_tokens": 384,
+    "threads": 6,
+    "gpu_layers": 26,
+    "samples_per_task": 1,
+    "llama_cpp_python": "0.3.36",
+    "judge": "WASI 256 MiB, EvalPlus 75 s, independent 10 s",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "evaluator_sha256": "014bb7179b96486255d6ad179bc9562ef5e2d3da8a14f5c4f162da43c750e46a",
+    "suite_code_sha256": "0f4ece0b2ac5a3079e38d9c388d23045640d96bb67addb0296d94b2fd7c1a6d2",
+    "oracle_sha256": "5f6cbe4f072a5991bf74035f153224df872b7dbb00576c3968621d23949220fa"
+  },
+  "scores": {
+    "humaneval_plus": {
+      "passed": 107,
+      "total": 164,
+      "rate": 0.6524390243902439,
+      "generation_tokens_per_second": 47.953667548253854,
+      "base_passed": 114,
+      "full": true
+    },
+    "mbpp_plus": {
+      "passed": 222,
+      "total": 378,
+      "rate": 0.5873015873015873,
+      "generation_tokens_per_second": 51.55586140369476,
+      "base_passed": 256,
+      "full": true
+    },
+    "independent": {
+      "passed": 0,
+      "total": 12,
+      "rate": 0.0,
+      "generation_tokens_per_second": 52.530282266345864,
+      "full": true
+    },
+    "math": {
+      "passed": 0,
+      "total": 16,
+      "rate": 0.0,
+      "generation_tokens_per_second": 52.75323092126367,
+      "full": true
+    }
+  }
+}

@@ -1,7 +1,11 @@
 [Setup]
 AppId={{302881F9-B378-4E7B-8597-E594C5721210}
 AppName=NOVERA AI Desktop
-AppVersion=1.2.4
+#ifndef ForgeAppVersion
+AppVersion=1.2.7
+#else
+AppVersion={#ForgeAppVersion}
+#endif
 AppPublisher=NOVERA / VIONA
 DefaultDirName={autopf}\NOVERA AI Desktop
 DefaultGroupName=NOVERA AI Desktop
@@ -25,8 +29,13 @@ LicenseFile=licenses\DISTRIBUTION.txt
 Name: desktopicon; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"
 
 [Files]
-Source: "dist\NOVERA_AI_Desktop\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\NOVERA_AI_Desktop\*"; DestDir: "{app}"; Excludes: "\model-pack\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+#ifndef ForgeAdapterHash
 Source: "model-pack\*"; DestDir: "{app}\model-pack"; Flags: onlyifdoesntexist recursesubdirs createallsubdirs uninsneveruninstall
+#else
+Source: "model-pack\models\qwen\model.gguf"; DestDir: "{app}\model-pack\models\qwen"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "model-pack\adapters\text\{#ForgeAdapterHash}.gguf"; DestDir: "{app}\model-pack\adapters\text"; Flags: onlyifdoesntexist uninsneveruninstall
+#endif
 Source: "USER_GUIDE_KO.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "prerequisites\MicrosoftEdgeWebView2RuntimeInstallerX64.exe"; DestDir: "{tmp}"; Flags: dontcopy
 
@@ -66,7 +75,3 @@ begin
   if (CurUninstallStep = usPostUninstall) and (not UninstallSilent) then
     MsgBox('Your conversations, settings and models have been preserved. User data: ' + ExpandConstant('{localappdata}\NOVERA AI Desktop') + #13#10 + 'Bundled models: ' + ExpandConstant('{app}\model-pack'), mbInformation, MB_OK);
 end;
-
-
-
-
