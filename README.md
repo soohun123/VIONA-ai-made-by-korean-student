@@ -2,6 +2,12 @@
 
 한국 학생이 개발하는 로컬 AI 웹사이트 및 Windows 데스크톱 실행기 소스입니다.
 
+## NOVERA Forge 1.5B · GGUF 다운로드
+
+**[Forge 534스텝 GGUF LoRA 다운로드](https://github.com/soohun123/VIONA-ai-made-by-korean-student/raw/06ffc31a5b0cd9a11c9b5f053eae61c7d0083e69/NOVERA_AI_Desktop_Release/forge-534/NOVERA-Forge-1.5B-LoRA-534steps-f16.gguf)**
+
+호환되는 Qwen2.5-Coder-1.5B-Instruct 기반 GGUF를 먼저 불러온 뒤 이 파일을 LoRA로 적용하세요. HumanEval+ Pass@1은 **65.24% (107/164)**입니다. [기반 모델과 SHA-256](NOVERA_AI_Desktop_Release/forge-534/release.json) · [평가 및 라이선스](NOVERA_AI_Desktop_Release/forge-534/README.md)
+
 - `NovaBrain/NovaBrain_LLM_v8`: 웹 UI, AI 서버, 모델 실행 및 학습 도구 소스
 - `NOVERA_AI_Desktop_Release`: 데스크톱 실행기, 테스트, Windows 빌드 및 서명된 로컬 자동 업데이트 도구
 
@@ -15,7 +21,7 @@
 
 ## 배포 범위
 
-이 저장소의 Git 파일은 소스코드 배포본입니다. 설치 EXE와 포함 모델은 위 Releases에서 별도로 제공합니다. 모델 가중치, LoRA, 설치 EXE, 가상환경, 학습 데이터, 대화 기록, API 키, 서명 개인키 및 실제 계정 설정은 포함하지 않습니다. 모델은 해당 제공자의 라이선스를 확인하고 별도로 준비해야 합니다.
+이 저장소에는 소스코드와 위 Forge GGUF LoRA 배포본이 있습니다. 공개 Windows 설치 EXE와 해당 설치본의 모델은 위 Releases에서 별도로 제공합니다. 기반 모델 파일, 설치 EXE, 가상환경, 학습 데이터, 대화 기록, API 키, 서명 개인키 및 실제 계정 설정은 Git에 포함하지 않습니다. 모델을 별도로 준비할 때는 해당 제공자의 라이선스를 확인하세요.
 
 ## 실행 전 준비
 
